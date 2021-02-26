@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class GuGuDan extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    first: Math.ceil(Math.random() * 9),
+                    second: Math.ceil(Math.random() * 9),
+                    value: '',
+                    result: '',
+                }
+            }
+            // onClick, onChange, onSubmit, onLoad, onInput, onFocus, onBlur -> 자바스크립트 기본 핸들러 
+
+            onSubmit = (e) => {
+                let { first, second, value } = this.state
+                e.preventDefault();
+                if (parseInt(value) === first * second) {
+                    this.setState((prevState) => { // 이전 state 값을 이용해 state 값을 변경할 경우 함수를 리턴해서 그 인자를 이용하자
+                        return {
+                        result:  `${prevState.value} 정답입니다!`,
+                        first: Math.ceil(Math.random() * 9),
+                        second: Math.ceil(Math.random() * 9),
+                        value: ''
+                        }
+                    })
+                    this.input.focus();
+                } else {
+                    this.setState({
+                        result: '틀렸습니다!',
+                        value: ''
+                    })
+                    this.input.focus();
+                }
+            }
+
+            onChange = (e) => {
+                this.setState({ value: e.target.value })
+            };
+
+            input;
+
+            onRefInput = (c) => { this.input = c; }
+
+            render() {
+                let { first, second, value, result } = this.state
+                return (
+                    <div>
+                        <div>{first} 곱하기 {second}는?</div>
+                        
+                        <form onSubmit={this.onSubmit}>
+                            <input ref={this.onRefInput} type="number" value={value} onChange={this.onChange} />
+                        
+                                <button>입력</button>
+                        </form>
+                        
+                        <div>{result}</div>
+                    </div>
+                )
+            }
+        }
+    </script>
+    <script type="text/babel">
+        ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+    </script>
+</body>
+
+</html>
